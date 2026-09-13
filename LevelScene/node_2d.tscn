@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://qd70ayswpxha"]
+
+[ext_resource type="PackedScene" uid="uid://2nluoohdjjlm" path="res://Characters/interactable_object.tscn" id="2_ot7av"]
+[ext_resource type="PackedScene" uid="uid://jml10eupyqr4" path="res://Manager/interaction_manager.tscn" id="3_wlnos"]
+
+[node name="Player" type="Node2D" unique_id=968304836]
+
+[node name="Interaction manager" parent="." unique_id=2009875331 node_paths=PackedStringArray("interactable_objects") instance=ExtResource("3_wlnos")]
+interactable_objects = [NodePath("Interactable object"), NodePath("Interactable object2"), NodePath("Interactable object3")]
+
+[node name="Interactable object" parent="Interaction manager" unique_id=1500585068 instance=ExtResource("2_ot7av")]
+position = Vector2(113, 211)
+
+[node name="Interactable object2" parent="Interaction manager" unique_id=797002344 instance=ExtResource("2_ot7av")]
+position = Vector2(319, 55)
+
+[node name="Interactable object3" parent="Interaction manager" unique_id=947903422 instance=ExtResource("2_ot7av")]
+position = Vector2(444, 369)
