@@ -6,13 +6,19 @@
 [node name="Player" type="Node2D" unique_id=968304836]
 
 [node name="Interaction manager" parent="." unique_id=2009875331 node_paths=PackedStringArray("interactable_objects") instance=ExtResource("3_wlnos")]
-interactable_objects = [NodePath("Interactable object"), NodePath("Interactable object2"), NodePath("Interactable object3")]
+interactable_objects = [NodePath("Interactable object"), NodePath("Interactable object2"), NodePath("Interactable object3"), NodePath("Interactable object4"), NodePath("Interactable object5")]
 
 [node name="Interactable object" parent="Interaction manager" unique_id=1500585068 instance=ExtResource("2_ot7av")]
-position = Vector2(113, 211)
+position = Vector2(198, 269)
 
 [node name="Interactable object2" parent="Interaction manager" unique_id=797002344 instance=ExtResource("2_ot7av")]
-position = Vector2(319, 55)
+position = Vector2(321, 146)
 
-[node name="Interactable object3" parent="Interaction manager" unique_id=947903422 instance=ExtResource("2_ot7av")]
-position = Vector2(444, 369)
+[node name="Interactable object3" parent="Interaction manager" unique_id=1658957501 instance=ExtResource("2_ot7av")]
+position = Vector2(466, 416)
+
+[node name="Interactable object4" parent="Interaction manager" unique_id=1571414583 instance=ExtResource("2_ot7av")]
+position = Vector2(617, 137)
+
+[node name="Interactable object5" parent="Interaction manager" unique_id=107918309 instance=ExtResource("2_ot7av")]
+position = Vector2(605, 546)

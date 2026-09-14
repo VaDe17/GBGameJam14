@@ -20,10 +20,6 @@ config/icon="res://Misc/icon.svg"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[global_group]
-
-interactable_object=""
-
 [input]
 
 ui_left={
