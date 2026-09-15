@@ -6,7 +6,7 @@ extends Node2D
 @export var cone_angle_deg: float = 75.0
 # Насколько важно, чтобы объект был ровно по направлению клавиши. 
 # Чем больше, тем важнее в процентах
-@export var angle_weight: float = 30.0
+@export var angle_weight: float = 90.0
 # Коэффициент «ничьи». Если два объекта одинаковы, выбор исходит из того где не был.
 @export var tie_threshold_ratio: float = 0.1
 

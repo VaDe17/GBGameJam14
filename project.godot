@@ -15,6 +15,10 @@ run/main_scene="res://LevelScene/Scene.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://Misc/icon.svg"
 
+[autoload]
+
+InteractionManager="*uid://jml10eupyqr4"
+
 [display]
 
 window/stretch/mode="canvas_items"

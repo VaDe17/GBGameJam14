@@ -26,10 +26,30 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Interactable object" type="Node2D" unique_id=1500585068 node_paths=PackedStringArray("animated_sprite")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_5e4fw"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7rn27"]
+radius = 32.0
+
+[node name="InteractableObject" type="Node2D" unique_id=1500585068]
+
+[node name="Animator" type="Node2D" parent="." unique_id=664687259 node_paths=PackedStringArray("animated_sprite")]
 script = ExtResource("1_xm62x")
 animated_sprite = NodePath("AnimatedSprite2D")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1034178052]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Animator" unique_id=1034178052]
 sprite_frames = SubResource("SpriteFrames_a4a25")
 animation = &"spin"
+
+[node name="InteractionPoint" type="Node2D" parent="." unique_id=497907221]
+
+[node name="InteractionBody" type="Area2D" parent="InteractionPoint" unique_id=609128259]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionPoint/InteractionBody" unique_id=207682491]
+shape = SubResource("CircleShape2D_5e4fw")
+
+[node name="ObjectBody" type="Area2D" parent="." unique_id=159463770]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ObjectBody" unique_id=1879327616]
+shape = SubResource("CircleShape2D_7rn27")

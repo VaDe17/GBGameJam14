@@ -6,21 +6,30 @@
 [node name="Player" type="Node2D" unique_id=968304836]
 
 [node name="Interaction manager" parent="." unique_id=2009875331 node_paths=PackedStringArray("interactable_objects", "driver_gears") instance=ExtResource("1_8wmy1")]
-interactable_objects = [NodePath("Interactable object"), NodePath("Interactable object2"), NodePath("Interactable object3"), NodePath("Interactable object4"), NodePath("Interactable object5")]
+interactable_objects = [NodePath("Interactable object"), NodePath("Interactable object2"), NodePath("Interactable object3"), NodePath("Interactable object4"), NodePath("Interactable object5"), NodePath("Interactable object6"), NodePath("Interactable object7")]
 driver_gears = [NodePath("Interactable object"), NodePath("Interactable object5")]
 mesh_tolerance = 10.0
 
 [node name="Interactable object" parent="Interaction manager" unique_id=1500585068 instance=ExtResource("2_ouwuo")]
-position = Vector2(218, 182)
-
-[node name="Interactable object2" parent="Interaction manager" unique_id=797002344 instance=ExtResource("2_ouwuo")]
-position = Vector2(265, 156)
+position = Vector2(221, 165)
 
 [node name="Interactable object3" parent="Interaction manager" unique_id=1658957501 instance=ExtResource("2_ouwuo")]
-position = Vector2(314, 182)
+position = Vector2(347, 155)
+
+[node name="Interactable object2" parent="Interaction manager" unique_id=797002344 instance=ExtResource("2_ouwuo")]
+z_index = -1
+position = Vector2(248, 137)
+
+[node name="Interactable object6" parent="Interaction manager" unique_id=1065784808 instance=ExtResource("2_ouwuo")]
+position = Vector2(303, 111)
+
+[node name="Interactable object7" parent="Interaction manager" unique_id=1679656199 instance=ExtResource("2_ouwuo")]
+position = Vector2(276, 159)
 
 [node name="Interactable object4" parent="Interaction manager" unique_id=1571414583 instance=ExtResource("2_ouwuo")]
-position = Vector2(357, 146)
+position = Vector2(366, 136)
 
 [node name="Interactable object5" parent="Interaction manager" unique_id=107918309 instance=ExtResource("2_ouwuo")]
-position = Vector2(412, 141)
+position = Vector2(402, 93)
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1628605644]
