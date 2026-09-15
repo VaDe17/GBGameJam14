@@ -10,6 +10,14 @@ extends Node2D
 # Коэффициент «ничьи». Если два объекта одинаковы, выбор исходит из того где не был.
 @export var tie_threshold_ratio: float = 0.1
 
+# Список главных шестерёнок. Каждая крутит свою цепочку.
+# Перетащи сюда все главные шестерёнки в инспекторе.
+@export var driver_gears: Array[Node2D] = []
+# Допуск на сцепление в пикселях.
+# Если расстояние между центрами двух шестерёнок близко
+# к сумме их радиусов (± столько пикселей) — считаем, что они сцеплены.
+@export var mesh_tolerance: float = 2.0
+
 # Текущий выбранный объект.
 var currently_selected_object: Node2D = null
 # Прошлый выбранный объект.
@@ -22,20 +30,15 @@ func _ready() -> void:
 		return
 	# Выбор первого объекта из списка.
 	currently_selected_object = interactable_objects[0]
-	_bigger_object()
-
-# Увеличивает размер выбранного объекта, остальные к обычному размеру.
-func _bigger_object() -> void:
-	for object in interactable_objects:
-		if object == currently_selected_object:
-			object.scale = Vector2(1.5, 1.5)
-		else:
-			object.scale = Vector2.ONE
+	_outline_object()
+	# Считаем, кто из шестерёнок должен крутиться.
+	_recalculate_gears()
 
 # Выполняется при нажатии кнопок.
 func _unhandled_input(event: InputEvent) -> void:
 	# Пустое направление. Если ничего не нажато — таким и останется.
 	var direction := Vector2.ZERO
+
 	# Проверка нажатия конкретной клавиши, остальные игнорируем.
 	if event.is_action_pressed("ui_left"):
 		direction = Vector2.LEFT
@@ -45,20 +48,30 @@ func _unhandled_input(event: InputEvent) -> void:
 		direction = Vector2.UP
 	elif event.is_action_pressed("ui_down"):
 		direction = Vector2.DOWN
-	
+
 	# Поиск объекта при нажатии хоть одной клавиши.
 	if direction != Vector2.ZERO:
 		_selection(direction)
 
+## Помечает выбранный объект, остальные объекты возвращаются к заданному размеру.
+func _outline_object() -> void:
+	for object in interactable_objects:
+		if object == currently_selected_object:
+			object.scale = Vector2(1.1, 1.1)
+		else:
+			object.scale = Vector2.ONE
+
 # Выбор объекта в заданном направлении
 func _selection(direction: Vector2) -> void: 
+	# Предотвращает путаницу
+	get_viewport().set_input_as_handled()
+
 	# Для случая если текущий выбранный объект был убран.
 	if currently_selected_object == null or not is_instance_valid(currently_selected_object):
 		return
-	
+
 	# Поиск лучшего объекта в заданном направлении.
 	var best_candidate := _find_best(direction, cone_angle_deg)
-
 	# Если ничего нет — оставляем выбор как был.
 	if best_candidate == null:
 		return
@@ -67,7 +80,7 @@ func _selection(direction: Vector2) -> void:
 	previous_selected_object = currently_selected_object
 	# Делает лучшего текущим.
 	currently_selected_object = best_candidate
-	_bigger_object()
+	_outline_object()
 
 # Ищет лучший объект в заданном направлении внутри зоны обзора.
 func _find_best(direction: Vector2, angle_deg: float) -> Node2D:
@@ -76,7 +89,6 @@ func _find_best(direction: Vector2, angle_deg: float) -> Node2D:
 	# Переводит угол в число для сравнения, 
 	# если у кандидата «совпадение по направлению» меньше этого — он вне сектора.
 	var minimum_alignment: float = cos(deg_to_rad(angle_deg))
-
 	# Список для всех подходящих кандидатов с их оценками.
 	var candidates: Array = []
 
@@ -88,7 +100,7 @@ func _find_best(direction: Vector2, angle_deg: float) -> Node2D:
 		# Если объект удалили со сцены — пропуск.
 		if not is_instance_valid(candidate):
 			continue
-		
+
 		# Стрелка от текущего объекта до кандидата.
 		var vector_to_candidate: Vector2 = candidate.global_position - current_position
 		# Длина этой стрелки = расстояние между ними.
@@ -144,3 +156,80 @@ func _find_best(direction: Vector2, angle_deg: float) -> Node2D:
 			return alternative_entry["object"]
 
 	return best_entry["object"]
+
+# Проходит по цепочке от главной шестерёнки и говорит каждой,
+# крутиться ей или нет.
+func _recalculate_gears() -> void:
+	# Сначала всем выключаем вращение.
+	for gear in interactable_objects:
+		if is_instance_valid(gear):
+			gear.set_driven(false)
+
+	# Если главных нет — нечего считать.
+	if driver_gears.is_empty():
+		print("driver_gears пуст!")
+		return
+
+	# Здесь отмечаем, кого уже обработали, чтобы не ходить по кругу.
+	var visited: Array = []
+
+	# Запускаем обход от каждой главной по очереди.
+	for driver in driver_gears:
+		if driver == null or not is_instance_valid(driver):
+			continue
+		# Каждая главная крутится в свою сторону.
+		# Если хочешь, чтобы все главные крутились одинаково — direction = 1.
+		_build_chain(driver, 1, visited)
+
+# Обходит цепочку от одной главной и говорит шестерёнкам крутиться.
+func _build_chain(start_gear: Node2D, start_direction: int, visited: Array) -> void:
+	var queue: Array = [{"gear": start_gear, "direction": start_direction}]
+
+	while not queue.is_empty():
+		var entry: Dictionary = queue.pop_front()
+		var gear: Node2D = entry["gear"]
+		var direction: int = entry["direction"]
+
+		# Если уже обработали — пропускаем.
+		if gear in visited:
+			continue
+		visited.append(gear)
+
+		# Говорим шестерёнке крутиться.
+		gear.set_driven(true, direction)
+
+		# Ищем всех, кто с ней сцеплен.
+		for other in interactable_objects:
+			if other == gear or not is_instance_valid(other):
+				continue
+			if other in visited:
+				continue
+			if _are_meshed(gear, other):
+				queue.append({"gear": other, "direction": -direction})
+
+# Проверяет, сцеплены ли две шестерёнки.
+func _are_meshed(a: Node2D, b: Node2D) -> bool:
+	var distance: float = a.global_position.distance_to(b.global_position)
+	var expected: float = a.radius + b.radius
+	return abs(distance - expected) < mesh_tolerance
+
+# Убирает выбранную шестерёнку со сцены.
+func _remove_selected() -> void:
+	if currently_selected_object == null or not is_instance_valid(currently_selected_object):
+		return
+
+	# Главные убирать нельзя — иначе цепочка порвётся.
+	if currently_selected_object in driver_gears:
+		return
+
+	var to_remove: Node2D = currently_selected_object
+	interactable_objects.erase(to_remove)
+	to_remove.queue_free()
+
+	if not interactable_objects.is_empty():
+		currently_selected_object = interactable_objects[0]
+	else:
+		currently_selected_object = null
+
+	_outline_object()
+	_recalculate_gears()
