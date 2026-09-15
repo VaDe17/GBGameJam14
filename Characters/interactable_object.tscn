@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://2nluoohdjjlm"]
 
-[ext_resource type="Script" uid="uid://ujg0n863dia5" path="res://Characters/object_rotation_manager.gd" id="1_xm62x"]
+[ext_resource type="Script" uid="uid://ujg0n863dia5" path="res://Characters/object_rotation.gd" id="1_xm62x"]
 [ext_resource type="Texture2D" uid="uid://n7o55bddrssf" path="res://Misc/Bronze Gear Wheel/Gear 11 - Bronze_00.png" id="2_aonl7"]
 [ext_resource type="Texture2D" uid="uid://blxhodwr0sqo4" path="res://Misc/Bronze Gear Wheel/Gear 11 - Bronze_01.png" id="3_xm62x"]
 [ext_resource type="Texture2D" uid="uid://flebncptmafk" path="res://Misc/Bronze Gear Wheel/Gear 11 - Bronze_02.png" id="4_7b8sc"]

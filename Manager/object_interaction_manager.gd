@@ -11,11 +11,9 @@ extends Node2D
 @export var tie_threshold_ratio: float = 0.1
 
 # Список главных шестерёнок. Каждая крутит свою цепочку.
-# Перетащи сюда все главные шестерёнки в инспекторе.
 @export var driver_gears: Array[Node2D] = []
 # Допуск на сцепление в пикселях.
-# Если расстояние между центрами двух шестерёнок близко
-# к сумме их радиусов (± столько пикселей) — считаем, что они сцеплены.
+# Расстояние к сумме их радиусов (± столько пикселей).
 @export var mesh_tolerance: float = 2.0
 
 # Текущий выбранный объект.
@@ -36,6 +34,12 @@ func _ready() -> void:
 
 # Выполняется при нажатии кнопок.
 func _unhandled_input(event: InputEvent) -> void:
+	# Проверка кнопки удаления.
+	if event.is_action_pressed("ui_accept"):
+		_remove_selected()
+		get_viewport().set_input_as_handled()
+		return  # выходим, чтобы не проверять стрелки
+	
 	# Пустое направление. Если ничего не нажато — таким и останется.
 	var direction := Vector2.ZERO
 
@@ -167,7 +171,6 @@ func _recalculate_gears() -> void:
 
 	# Если главных нет — нечего считать.
 	if driver_gears.is_empty():
-		print("driver_gears пуст!")
 		return
 
 	# Здесь отмечаем, кого уже обработали, чтобы не ходить по кругу.
